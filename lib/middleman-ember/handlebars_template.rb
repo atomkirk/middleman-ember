@@ -34,7 +34,18 @@ module MiddlemanEmber
 
     def template_name(path)
       template_path = @@options[:template_path]
-      path.sub!(/#{Regexp.quote(template_path)}\/?/, '')
+      if template_path.class == String
+        path.sub!(/#{Regexp.quote(template_path)}\/?/, '')
+      elsif template_path.class == Array
+        for t_path in template_path
+          path_copy = "#{path}" 
+          path_copy.sub!(/#{Regexp.quote(t_path)}\/?/, '')
+          if File.exists? path_copy
+            path = path_copy  
+            break
+          end
+        end
+      end
       path
     end
   end
